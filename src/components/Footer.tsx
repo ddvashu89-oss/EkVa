@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -27,31 +27,31 @@ export default function Footer() {
             </h4>
             <div className="space-y-2.5">
               <Link
-                href="/"
+                to="/"
                 className="block text-sm text-sand/50 hover:text-sand transition-colors"
               >
                 Home
               </Link>
               <Link
-                href="/vaidiya"
+                to="/vaidiya"
                 className="block text-sm text-sand/50 hover:text-sand transition-colors"
               >
                 Plant Doctor
               </Link>
               <Link
-                href="/about"
+                to="/about"
                 className="block text-sm text-sand/50 hover:text-sand transition-colors"
               >
                 The Land
               </Link>
               <Link
-                href="/products"
+                to="/products"
                 className="block text-sm text-sand/50 hover:text-sand transition-colors"
               >
                 Products
               </Link>
               <Link
-                href="/contact"
+                to="/contact"
                 className="block text-sm text-sand/50 hover:text-sand transition-colors"
               >
                 Contact

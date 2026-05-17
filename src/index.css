@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-moss: #2E3B23;
+  --color-charcoal: #1A1A1A;
+  --color-sand: #D6CFC7;
+  --color-sand-light: #E8E2D9;
+  --color-terracotta: #B5651D;
+  --color-gold: #C9A84C;
+  --color-gold-light: #E0C878;
+  --color-cream: #F5F0E8;
+  --color-ivory: #FAF8F5;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+@layer base {
+  * {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-charcoal text-sand font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-gold/20 text-gold-light;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .btn-gold {
+    @apply flex items-center gap-2 bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 px-5 py-2.5 rounded-full text-xs uppercase tracking-widest transition-all cursor-pointer;
+  }
+
+  .btn-ghost {
+    @apply flex items-center gap-2 border border-sand/20 text-sand/60 hover:text-sand hover:border-sand/40 px-5 py-2.5 rounded-full text-xs uppercase tracking-widest transition-all cursor-pointer;
+  }
+}

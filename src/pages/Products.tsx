@@ -1,8 +1,5 @@
-"use client";
-
 import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 const products = [
   {
@@ -85,7 +82,7 @@ const upcoming = [
   },
 ];
 
-export default function ProductsPage() {
+export default function Products() {
   const [activeProduct, setActiveProduct] = useState<any>(null);
   const [variant, setVariant] = useState("");
   const [qty, setQty] = useState(1);
@@ -159,13 +156,10 @@ export default function ProductsPage() {
     <>
       {/* ── HERO ── */}
       <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
-        <Image
+        <img
           src="/images/indoor-plants.jpg"
           alt=""
-          fill
-          className="object-cover opacity-15"
-          priority
-          sizes="100vw"
+          className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-moss/30 to-charcoal" />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
@@ -204,12 +198,10 @@ export default function ProductsPage() {
                 className="border border-moss/30 rounded-2xl p-8 hover:border-gold/20 transition-all bg-moss/5 flex flex-col"
               >
                 <div className="relative w-full aspect-[3/2] rounded-xl overflow-hidden mb-6 border border-moss/20">
-                  <Image
+                  <img
                     src={product.image}
                     alt={product.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
                 </div>
 
@@ -448,7 +440,7 @@ export default function ProductsPage() {
 
                   <div className="space-y-3 pt-6">
                     <Link
-                      href="/orders"
+                      to="/orders"
                       className="w-full inline-flex items-center justify-center btn-gold py-3 text-xs uppercase tracking-widest"
                     >
                       View Orders Dashboard

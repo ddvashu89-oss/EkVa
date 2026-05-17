@@ -1,14 +1,12 @@
-"use client";
-
 import { useRef, useState, useEffect } from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 interface Message {
   role: "user" | "assistant";
   content: string;
 }
 
-export default function VaidiyaPage() {
+export default function Vaidiya() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -190,7 +188,6 @@ export default function VaidiyaPage() {
     const text = userInput.toLowerCase();
     let responseText = "";
 
-    // Base knowledge maps
     if (text.includes("neem") || text.includes("pest") || text.includes("insect") || text.includes("bug")) {
       responseText = `🌿 **Vrikshayurveda Neem Shield Recipe**:\n\nTo protect your plant naturally from insects, aphids, or scale, prepare a **Vaidya Shield Blend**:\n1. Mix **1 teaspoon of organic pure Cold-pressed Neem Oil** with 1/2 teaspoon of mild organic liquid soap in **1 liter of lukewarm water**.\n2. Shake thoroughly and spray onto leaves (especially underneath) in the early morning or evening. Avoid afternoon sun to prevent leaf burn.\n\n*Ayurvedic Tip:* Adding a handful of our **Aadhar-Vati Neem** blend into the soil will fortify the plant from the roots up!`;
     } else if (text.includes("aadhar-vati") || text.includes("fertilizer") || text.includes("compost") || text.includes("how to use")) {
@@ -202,7 +199,6 @@ export default function VaidiyaPage() {
     } else if (text.includes("hello") || text.includes("hi") || text.includes("hey")) {
       responseText = `Greetings, plant guardian! I am ready to guide you. How is your garden breathing today? \n\nYou can ask me about:\n* **Ayurvedic Neem pest sprays**\n* **How to feed with Aadhar-Vati**\n* **Curing yellow or drooping leaves**\n* **Checking your plant's Dosha balance**`;
     } else {
-      // Synthesize response based on current diagnosis if available
       if (activeDiagnosis) {
         responseText = `🌸 **Vaidiya Botanical Assessment Update**:\n\nBased on your leaf analysis (**${activeDiagnosis.verdict.toUpperCase()}** at ${weather?.t || 28}°C), the plant needs attentive balancing.\n\nTo address this: \n* Optimize **Prana flow** by trimming dry parts.\n* Ensure the container has drainage holes to avoid root rotting.\n* Apply **Aadhar-Vati** once a month for sustained trace mineral absorption.\n\nWhat specific symptoms (spots, leaf drop, insects) are you noticing? Tell me more so I can formulate a targeted herbal remedy.`;
       } else {
@@ -250,7 +246,6 @@ export default function VaidiyaPage() {
       return;
     }
     if (!weather) {
-      // Generate standard comfortable environment parameters if user skipped location
       setWeather({ t: 28, h: 50, c: "Clear Sky" });
     }
     setLoading(true);
@@ -448,7 +443,6 @@ export default function VaidiyaPage() {
               
               <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-moss/30 bg-charcoal/80 flex items-center justify-center">
                 {photo ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
                   <img src={photo} alt="Plant" className="w-full h-full object-cover" />
                 ) : cam ? (
                   <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
@@ -729,7 +723,7 @@ export default function VaidiyaPage() {
                               <p className="text-sm text-cream font-serif">Aadhar-Vati Pure (The Foundation Dose)</p>
                               <p className="text-[10px] text-sand/40">Premium vermicompost fortified with mineral carbon to fix leaf yellowing.</p>
                             </div>
-                            <Link href="/products" className="btn-gold py-2 text-[10px] uppercase font-semibold">
+                            <Link to="/products" className="btn-gold py-2 text-[10px] uppercase font-semibold">
                               Get Aadhar-Vati
                             </Link>
                           </div>
@@ -758,7 +752,7 @@ export default function VaidiyaPage() {
                               <p className="text-sm text-cream font-serif">Aadhar-Vati Coco (The Light Base)</p>
                               <p className="text-[10px] text-sand/40">Fortified with high-grade cocopeat to increase moisture retention by 60%.</p>
                             </div>
-                            <Link href="/products" className="btn-gold py-2 text-[10px] uppercase font-semibold">
+                            <Link to="/products" className="btn-gold py-2 text-[10px] uppercase font-semibold">
                               Get Aadhar-Vati
                             </Link>
                           </div>
@@ -787,7 +781,7 @@ export default function VaidiyaPage() {
                               <p className="text-sm text-cream font-serif">Aadhar-Vati series Blends</p>
                               <p className="text-[10px] text-sand/40">Keep soil thriving with premium organic microbial feeds.</p>
                             </div>
-                            <Link href="/products" className="btn-gold py-2 text-[10px] uppercase font-semibold">
+                            <Link to="/products" className="btn-gold py-2 text-[10px] uppercase font-semibold">
                               Explore Products
                             </Link>
                           </div>

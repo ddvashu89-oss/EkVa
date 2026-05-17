@@ -23,7 +23,7 @@ interface Reminder {
   is_enabled: number; // 0 | 1
 }
 
-export default function OrdersDashboard() {
+export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [dbConnected, setDbConnected] = useState(true);
@@ -348,7 +348,6 @@ export default function OrdersDashboard() {
             <button
               onClick={() => {
                 setActiveAlert(null);
-                // Trigger audio chime again for satisfying completion feel
                 playZenBell();
               }}
               className="bg-gold/10 border border-gold/40 text-gold hover:bg-gold/25 px-5 py-2 rounded-full text-xs uppercase tracking-wider font-bold cursor-pointer"
@@ -496,7 +495,7 @@ export default function OrdersDashboard() {
             </svg>
             <h3 className="font-serif text-2xl text-cream mb-2">No Soil Allocations Found</h3>
             <p className="text-xs max-w-md mx-auto leading-relaxed mb-8">
-              You haven&apos;t placed any compost orders yet. Allocate a batch of premium living soil from our beds to kickstart your plant wellness journey.
+              You haven&rsquo;t placed any compost orders yet. Allocate a batch of premium living soil from our beds to kickstart your plant wellness journey.
             </p>
             <Link
               to="/products"

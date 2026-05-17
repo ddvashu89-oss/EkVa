@@ -1,7 +1,4 @@
-"use client";
-
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 interface Order {
   id: string;
@@ -44,7 +41,7 @@ interface Message {
   created_at?: string;
 }
 
-export default function AdminDashboard() {
+export default function Admin() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -194,7 +191,6 @@ export default function AdminDashboard() {
         });
         if (!res.ok) throw new Error("Delete request failed");
         
-        // Reload data
         loadData();
       } catch (err: any) {
         alert("Database error: Could not cancel order. " + err.message);
@@ -206,7 +202,6 @@ export default function AdminDashboard() {
         const updated = JSON.parse(local).filter((o: any) => o.id !== id);
         localStorage.setItem("ekva_orders", JSON.stringify(updated));
         
-        // Map and update state
         setOrders(updated.map((o: any) => ({
           id: o.id,
           product_name: o.productName,
@@ -586,7 +581,6 @@ export default function AdminDashboard() {
                           onClick={() => setExpandedPhoto(d.photo)}
                           title="Click to view full image"
                         >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img 
                             src={d.photo} 
                             alt="Leaf" 
@@ -765,7 +759,6 @@ export default function AdminDashboard() {
             </button>
             
             <div className="w-full aspect-[4/3] relative rounded-xl overflow-hidden border border-moss/20 mt-8 mb-4">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
                 src={expandedPhoto} 
                 alt="Leaf High Resolution Scan" 

@@ -1,9 +1,6 @@
-"use client";
-
 import { useState } from "react";
-import Image from "next/image";
 
-export default function ContactPage() {
+export default function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -49,13 +46,10 @@ export default function ContactPage() {
     <>
       {/* ── HERO ── */}
       <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
-        <Image
+        <img
           src="/images/woman-planting.jpg"
           alt=""
-          fill
-          className="object-cover opacity-15"
-          priority
-          sizes="100vw"
+          className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-moss/30 to-charcoal" />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">

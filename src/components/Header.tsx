@@ -1,6 +1,4 @@
-"use client";
-
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const navLinks = [
@@ -19,7 +17,7 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-charcoal/90 backdrop-blur-md border-b border-moss/30">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link to="/" className="flex items-center gap-2 group">
             <div className="w-8 h-8 rounded-full border border-gold/60 flex items-center justify-center group-hover:border-gold transition-colors">
               <span className="text-gold text-xs font-serif">Ek</span>
             </div>
@@ -32,14 +30,14 @@ export default function Header() {
             {navLinks.map((link) => (
               <Link
                 key={link.href}
-                href={link.href}
+                to={link.href}
                 className="text-sm tracking-wider text-sand/70 hover:text-gold transition-colors uppercase"
               >
                 {link.label}
               </Link>
             ))}
             <Link
-              href="/products"
+              to="/products"
               className="text-sm tracking-wider uppercase bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 px-5 py-2 rounded-full transition-all"
             >
               Get Aadhar-Vati
@@ -70,7 +68,7 @@ export default function Header() {
             {navLinks.map((link) => (
               <Link
                 key={link.href}
-                href={link.href}
+                to={link.href}
                 onClick={() => setOpen(false)}
                 className="block text-sm tracking-wider text-sand/70 hover:text-gold transition-colors uppercase"
               >
@@ -78,7 +76,7 @@ export default function Header() {
               </Link>
             ))}
             <Link
-              href="/products"
+              to="/products"
               onClick={() => setOpen(false)}
               className="block text-sm tracking-wider uppercase bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 px-5 py-2.5 rounded-full text-center transition-all"
             >
