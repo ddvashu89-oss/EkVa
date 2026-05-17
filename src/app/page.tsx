@@ -302,6 +302,75 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── VAIDYA PROMO ── */}
+      <section className="py-28 md:py-36 border-t border-moss/20">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="mb-4">
+                <span className="text-xs uppercase tracking-[0.3em] text-gold/50">
+                  Vaidiya
+                </span>
+              </div>
+              <h2 className="font-serif text-4xl md:text-5xl text-cream mb-6 leading-tight">
+                Your Plant&rsquo;s Personal Doctor
+              </h2>
+              <p className="text-sand/50 leading-relaxed mb-6">
+                Take a photo. Our AI analyzes leaf health, cross-references your
+                local weather, humidity, and temperature — and tells you exactly
+                if your plant needs water.
+              </p>
+              <ul className="space-y-3 mb-8">
+                {[
+                  "Real-time weather &amp; humidity analysis",
+                  "Computer vision leaf health assessment",
+                  "Ayurvedic care tips for your specific plant",
+                  "No hardware needed — just your phone",
+                ].map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-start gap-3 text-sm text-sand/50"
+                  >
+                    <span className="mt-1.5 h-1 w-3 bg-gold/50 rounded-full shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/vaidiya"
+                className="inline-flex items-center gap-2 bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 px-8 py-3.5 rounded-full text-sm uppercase tracking-widest transition-all"
+              >
+                Try the Plant Doctor
+              </Link>
+            </div>
+
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-moss/30">
+              <Image
+                src="/images/woman-planting.jpg"
+                alt="Plant care diagnosis"
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+              <div className="absolute bottom-4 left-4 right-4 bg-charcoal/80 backdrop-blur-sm rounded-xl p-4 border border-gold/20">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">💧</span>
+                  <div>
+                    <p className="text-sm text-cream font-serif">
+                      Needs Watering
+                    </p>
+                    <p className="text-[10px] text-sand/40">
+                      32&deg;C &middot; 28% Humidity &middot; 87% confidence
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ── */}
       <section className="py-28 md:py-36 border-t border-moss/20 bg-gradient-to-b from-moss/5 to-charcoal">
         <div className="mx-auto max-w-3xl px-6 text-center">

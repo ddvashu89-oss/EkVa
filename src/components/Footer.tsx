@@ -33,6 +33,12 @@ export default function Footer() {
                 Home
               </Link>
               <Link
+                href="/vaidiya"
+                className="block text-sm text-sand/50 hover:text-sand transition-colors"
+              >
+                Plant Doctor
+              </Link>
+              <Link
                 href="/about"
                 className="block text-sm text-sand/50 hover:text-sand transition-colors"
               >
