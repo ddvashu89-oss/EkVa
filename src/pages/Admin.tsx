@@ -53,23 +53,73 @@ export default function Admin() {
   const [expandedPhoto, setExpandedPhoto] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  // Administrative Credentials & Session States
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("ekva_admin_auth") === "true";
+    }
+    return false;
+  });
+  const [password, setPassword] = useState("");
+  const [authError, setAuthError] = useState("");
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    const correctPassword = import.meta.env.VITE_ADMIN_PASSWORD || "ekva@admin2026";
+    if (password === correctPassword) {
+      setIsAuthenticated(true);
+      sessionStorage.setItem("ekva_admin_auth", "true");
+      sessionStorage.setItem("ekva_admin_password", password);
+      setAuthError("");
+    } else {
+      setAuthError("Incorrect Administrative Key. Access Denied.");
+      setPassword("");
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem("ekva_admin_auth");
+    sessionStorage.removeItem("ekva_admin_password");
+    setPassword("");
+  };
+
+  const getAuthHeaders = () => {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json"
+    };
+    const storedPassword = sessionStorage.getItem("ekva_admin_password") || "";
+    if (storedPassword) {
+      headers["Authorization"] = `Bearer ${storedPassword}`;
+    }
+    return headers;
+  };
+
   // Load backend data
   const loadData = async () => {
+    if (!sessionStorage.getItem("ekva_admin_password")) return;
+
     setLoading(true);
     setErrorMsg(null);
     try {
-      // 1. Fetch Orders from PHP API
-      const ordersRes = await fetch("/api/orders.php");
+      // 1. Fetch Orders from Node.js API
+      const ordersRes = await fetch("/api/orders", {
+        headers: getAuthHeaders()
+      });
       if (!ordersRes.ok) throw new Error("Orders API returned " + ordersRes.status);
       const ordersJson = await ordersRes.json();
       
-      // 2. Fetch Diagnoses from PHP API
-      const diagRes = await fetch("/api/diagnoses.php");
+      // 2. Fetch Diagnoses from Node.js API
+      const diagRes = await fetch("/api/diagnoses", {
+        headers: getAuthHeaders()
+      });
       if (!diagRes.ok) throw new Error("Diagnoses API returned " + diagRes.status);
       const diagJson = await diagRes.json();
 
-      // 3. Fetch Messages from PHP API
-      const msgRes = await fetch("/api/messages.php");
+      // 3. Fetch Messages from Node.js API
+      const msgRes = await fetch("/api/messages", {
+        headers: getAuthHeaders()
+      });
       if (!msgRes.ok) throw new Error("Messages API returned " + msgRes.status);
       const msgJson = await msgRes.json();
 
@@ -97,10 +147,10 @@ export default function Admin() {
         throw new Error(ordersJson.message || diagJson.message || msgJson.message || "Unknown error connecting to API");
       }
     } catch (err: any) {
-      console.warn("PHP Backend database connection offline. Switching to offline fallback mode.", err);
+      console.warn("Backend API offline. Switching to offline local storage fallback mode.", err);
       setDbConnected(false);
       
-      // Fallback: load orders from localStorage & load a mock diagnosis
+      // Fallback: load orders from localStorage
       const local = localStorage.getItem("ekva_orders");
       if (local) {
         const parsed = JSON.parse(local).map((o: any) => ({
@@ -120,7 +170,7 @@ export default function Admin() {
         setOrders([]);
       }
       
-      // Create offline default diagnoses if MySQL is offline
+      // Create offline default diagnoses if database is offline
       setDiagnoses([
         {
           id: 999,
@@ -146,7 +196,7 @@ export default function Admin() {
           id: 999,
           name: "Offline Guest",
           email: "guest@ekva-demo.in",
-          message: "Offline Demo Message: Please start the local Apache & PHP backend server to access the live MySQL database!"
+          message: "Offline Demo Message: Please launch your local Node.js API server (node server.js) to connect to live Firebase collections!"
         }
       ]);
     } finally {
@@ -155,15 +205,19 @@ export default function Admin() {
   };
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (isAuthenticated) {
+      loadData();
+    }
+  }, [isAuthenticated]);
 
   // Trigger Database setup and seed data
   const handleSeedDatabase = async () => {
     setSeeding(true);
     setErrorMsg(null);
     try {
-      const res = await fetch("/api/setup.php");
+      const res = await fetch("/api/setup", {
+        headers: getAuthHeaders()
+      });
       if (!res.ok) throw new Error("Setup endpoint failed");
       const json = await res.json();
       if (json.status === "success") {
@@ -173,7 +227,7 @@ export default function Admin() {
         throw new Error(json.message);
       }
     } catch (err: any) {
-      alert("Seeding failed: Please ensure Apache, MySQL, and the PHP API server are active on port 8000!");
+      alert("Seeding failed: Please ensure the local Node.js backend (node server.js) is active on port 8000!");
       setErrorMsg(err.message);
     } finally {
       setSeeding(false);
@@ -186,8 +240,9 @@ export default function Admin() {
 
     if (dbConnected) {
       try {
-        const res = await fetch(`/api/orders.php?id=${id}`, {
-          method: "DELETE"
+        const res = await fetch(`/api/orders?id=${id}`, {
+          method: "DELETE",
+          headers: getAuthHeaders()
         });
         if (!res.ok) throw new Error("Delete request failed");
         
@@ -219,13 +274,14 @@ export default function Admin() {
   };
 
   // Delete message
-  const handleDeleteMessage = async (id: number) => {
+  const handleDeleteMessage = async (id: string | number) => {
     if (!confirm(`Are you sure you want to permanently delete this message inquiry?`)) return;
 
     if (dbConnected) {
       try {
-        const res = await fetch(`/api/messages.php?id=${id}`, {
-          method: "DELETE"
+        const res = await fetch(`/api/messages?id=${id}`, {
+          method: "DELETE",
+          headers: getAuthHeaders()
         });
         if (!res.ok) throw new Error("Delete request failed");
         loadData();
@@ -259,6 +315,58 @@ export default function Admin() {
       m.message.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-charcoal text-sand pt-32 pb-20 flex items-center justify-center">
+        <div className="max-w-md w-full mx-auto px-6">
+          <div className="border border-moss/30 rounded-2xl p-8 bg-moss/5 backdrop-blur-md relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-gold/[0.02] rounded-full blur-xl pointer-events-none" />
+            
+            <div className="text-center mb-8">
+              <div className="w-12 h-12 rounded-full border border-gold/60 flex items-center justify-center mx-auto mb-4">
+                <span className="text-gold text-sm font-serif">🔒</span>
+              </div>
+              <span className="text-[10px] uppercase tracking-[0.3em] text-gold/60 font-serif">Administrative Gate</span>
+              <h2 className="font-serif text-2xl text-cream mt-2">Console Locked</h2>
+              <p className="text-sand/50 text-xs mt-2 leading-relaxed">
+                Please enter the administrative password to access the Unified Admin Console and trace bio-bed logs.
+              </p>
+            </div>
+
+            {authError && (
+              <div className="border border-terracotta/40 rounded-xl p-3 bg-terracotta/[0.04] mb-5 text-center text-xs text-terracotta select-none animate-fadeIn">
+                ⚠️ {authError}
+              </div>
+            )}
+
+            <form onSubmit={handleLogin} className="space-y-5">
+              <div>
+                <label className="block text-xs uppercase tracking-wider text-sand/40 mb-2">
+                  Administrative Key
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                  className="w-full bg-charcoal border border-moss/30 rounded-lg px-4 py-3 text-sm text-sand focus:outline-none focus:border-gold/40 placeholder-sand/20 transition-colors"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 px-8 py-3.5 rounded-lg text-sm uppercase tracking-widest transition-all cursor-pointer font-bold"
+              >
+                Verify & Unlock
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-charcoal text-sand pt-32 pb-20">
       <div className="mx-auto max-w-7xl px-6">
@@ -269,7 +377,7 @@ export default function Admin() {
             <span className="text-xs uppercase tracking-[0.3em] text-gold/60 font-serif">Administrative Core</span>
             <h1 className="font-serif text-4xl md:text-5xl text-cream mt-2">Unified Admin Console</h1>
             <p className="text-sand/50 text-xs md:text-sm mt-2 max-w-xl leading-relaxed">
-              Monitor compost allocations from our organic bio-beds, view AI plant diagnosis logs, and respond to incoming customer inquiries stored securely in the MySQL database.
+              Monitor compost allocations from our organic bio-beds, view AI plant diagnosis logs, and respond to incoming customer inquiries stored securely in our Firebase Firestore database.
             </p>
           </div>
 
@@ -288,6 +396,13 @@ export default function Admin() {
               className="inline-flex items-center gap-2 text-xs uppercase tracking-widest bg-gold/10 border border-gold/40 text-gold hover:bg-gold/25 px-5 py-3 rounded-full transition-all cursor-pointer font-bold disabled:opacity-50"
             >
               {seeding ? "⚙️ Seeding..." : "🌱 Seed DB Samples"}
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-widest border border-terracotta/30 hover:border-terracotta/60 bg-terracotta/5 text-terracotta hover:bg-terracotta/10 px-5 py-3 rounded-full transition-all cursor-pointer font-bold"
+            >
+              🔒 Lock Console
             </button>
           </div>
         </div>

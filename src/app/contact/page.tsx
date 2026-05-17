@@ -20,7 +20,7 @@ export default function ContactPage() {
     setSuccess(false);
 
     try {
-      const res = await fetch("/api/messages.php", {
+      const res = await fetch("/api/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -39,7 +39,7 @@ export default function ContactPage() {
       }
     } catch (err: any) {
       console.error("Error submitting contact form:", err);
-      setErrorMsg(err.message || "Server offline. Make sure the database and PHP API are active on port 8000!");
+      setErrorMsg(err.message || "Server offline. Make sure the database and Node.js API server are active on port 8000!");
     } finally {
       setLoading(false);
     }

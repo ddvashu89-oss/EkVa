@@ -385,8 +385,8 @@ export default function VaidiyaPage() {
           setResult(newDiagnosis);
           setChecklist(suggestedChecklist);
 
-          // Save scan data to database via PHP API
-          fetch("/api/diagnoses.php", {
+          // Save scan data to database via Node.js API
+          fetch("/api/diagnoses", {
             method: "POST",
             headers: {
               "Content-Type": "application/json"
@@ -395,11 +395,11 @@ export default function VaidiyaPage() {
           })
             .then((res) => {
               if (!res.ok) {
-                console.warn("PHP database save failed for cellular scan.");
+                console.warn("Node.js database save failed for cellular scan.");
               }
             })
             .catch((err) => {
-              console.warn("PHP server offline, scan saved in client memory only.", err);
+              console.warn("Node.js server offline, scan saved in client memory only.", err);
             });
 
           // Update AI chatbot context
@@ -432,7 +432,7 @@ export default function VaidiyaPage() {
           <span className="text-xs uppercase tracking-[0.3em] text-gold/60 font-serif">Unified AI Care</span>
           <h1 className="font-serif text-4xl md:text-6xl text-cream mt-3 mb-4">Vaidiya Plant Doctor</h1>
           <p className="text-sand/50 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-            Ancient *Vrikshayurveda* meets premium computer vision. Analyze your plant's leaf cellular health, map its environmental dosha, and receive custom organic solutions.
+            Ancient *Vrikshayurveda* meets premium computer vision. Analyze your plant&rsquo;s leaf cellular health, map its environmental dosha, and receive custom organic solutions.
           </p>
         </div>
 

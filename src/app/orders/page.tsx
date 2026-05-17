@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 interface Order {
   id: string;
@@ -15,7 +15,7 @@ interface Order {
 }
 
 interface Reminder {
-  id?: number;
+  id?: string | number;
   plant_name: string;
   task_type: string; // 'water', 'fertilize', 'mist', 'aerate'
   frequency: string; // 'Daily', 'Every 3 Days', 'Weekly'
@@ -87,7 +87,7 @@ export default function OrdersDashboard() {
 
     // 2. Load Reminders from Database
     try {
-      const res = await fetch("/api/reminders.php");
+      const res = await fetch("/api/reminders");
       if (!res.ok) throw new Error("Reminders API unreachable");
       const json = await res.json();
       if (json.status === "success") {
@@ -106,7 +106,7 @@ export default function OrdersDashboard() {
         // Initial offline default samples
         const sampleRem = [
           {
-            id: 101,
+            id: "101",
             plant_name: "Living Room Monstera",
             task_type: "water",
             frequency: "Daily",
@@ -114,7 +114,7 @@ export default function OrdersDashboard() {
             is_enabled: 1
           },
           {
-            id: 102,
+            id: "102",
             plant_name: "Balcony Rose Shrub",
             task_type: "fertilize",
             frequency: "Weekly",
@@ -205,7 +205,7 @@ export default function OrdersDashboard() {
 
     if (dbConnected) {
       try {
-        const res = await fetch("/api/reminders.php", {
+        const res = await fetch("/api/reminders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newReminderData)
@@ -220,7 +220,7 @@ export default function OrdersDashboard() {
     } else {
       // Offline fallback storage
       const newRem: Reminder = {
-        id: Date.now(),
+        id: String(Date.now()),
         plant_name: plantName,
         task_type: taskType,
         frequency: frequency,
@@ -236,12 +236,12 @@ export default function OrdersDashboard() {
   };
 
   // Toggle Reminder Enable Switch
-  const handleToggleReminder = async (id: number, currentStatus: number) => {
+  const handleToggleReminder = async (id: string | number, currentStatus: number) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
 
     if (dbConnected) {
       try {
-        const res = await fetch("/api/reminders.php", {
+        const res = await fetch("/api/reminders", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: id, is_enabled: newStatus })
@@ -262,10 +262,10 @@ export default function OrdersDashboard() {
   };
 
   // Delete Reminder
-  const handleDeleteReminder = async (id: number) => {
+  const handleDeleteReminder = async (id: string | number) => {
     if (dbConnected) {
       try {
-        const res = await fetch(`/api/reminders.php?id=${id}`, {
+        const res = await fetch(`/api/reminders?id=${id}`, {
           method: "DELETE"
         });
         if (!res.ok) throw new Error("Reminder deletion API failed");
@@ -372,7 +372,7 @@ export default function OrdersDashboard() {
             </p>
           </div>
           <Link
-            to="/products"
+            href="/products"
             className="inline-flex items-center gap-2 text-xs uppercase tracking-widest bg-gold/15 border border-gold/40 text-gold hover:bg-gold/25 px-6 py-3 rounded-full transition-all self-start md:self-auto"
           >
             🌱 Order More Soil
@@ -499,7 +499,7 @@ export default function OrdersDashboard() {
               You haven&apos;t placed any compost orders yet. Allocate a batch of premium living soil from our beds to kickstart your plant wellness journey.
             </p>
             <Link
-              to="/products"
+              href="/products"
               className="inline-flex items-center gap-2 bg-gold/10 border border-gold/30 text-gold hover:bg-gold/25 px-8 py-3.5 rounded-full text-xs uppercase tracking-widest transition-all cursor-pointer font-bold"
             >
               Explore Products Range
@@ -636,7 +636,7 @@ export default function OrdersDashboard() {
                 <h3 className="font-serif text-lg text-cream">Active Schedule Alarms</h3>
                 <span className="text-[10px] text-sand/40 font-mono">
                   Database Sync: <strong className={dbConnected ? "text-green-500 font-bold" : "text-gold font-bold"}>
-                    {dbConnected ? "Live MySQL" : "Local Fallback"}
+                    {dbConnected ? "Live Firebase" : "Local Fallback"}
                   </strong>
                 </span>
               </div>

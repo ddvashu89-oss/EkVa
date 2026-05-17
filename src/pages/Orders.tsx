@@ -15,7 +15,7 @@ interface Order {
 }
 
 interface Reminder {
-  id?: number;
+  id?: string | number;
   plant_name: string;
   task_type: string; // 'water', 'fertilize', 'mist', 'aerate'
   frequency: string; // 'Daily', 'Every 3 Days', 'Weekly'
@@ -87,7 +87,7 @@ export default function Orders() {
 
     // 2. Load Reminders from Database
     try {
-      const res = await fetch("/api/reminders.php");
+       const res = await fetch("/api/reminders");
       if (!res.ok) throw new Error("Reminders API unreachable");
       const json = await res.json();
       if (json.status === "success") {
@@ -205,7 +205,7 @@ export default function Orders() {
 
     if (dbConnected) {
       try {
-        const res = await fetch("/api/reminders.php", {
+        const res = await fetch("/api/reminders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newReminderData)
@@ -236,12 +236,12 @@ export default function Orders() {
   };
 
   // Toggle Reminder Enable Switch
-  const handleToggleReminder = async (id: number, currentStatus: number) => {
+  const handleToggleReminder = async (id: string | number, currentStatus: number) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
 
     if (dbConnected) {
       try {
-        const res = await fetch("/api/reminders.php", {
+        const res = await fetch("/api/reminders", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: id, is_enabled: newStatus })
@@ -262,10 +262,10 @@ export default function Orders() {
   };
 
   // Delete Reminder
-  const handleDeleteReminder = async (id: number) => {
+  const handleDeleteReminder = async (id: string | number) => {
     if (dbConnected) {
       try {
-        const res = await fetch(`/api/reminders.php?id=${id}`, {
+        const res = await fetch(`/api/reminders?id=${id}`, {
           method: "DELETE"
         });
         if (!res.ok) throw new Error("Reminder deletion API failed");
@@ -635,7 +635,7 @@ export default function Orders() {
                 <h3 className="font-serif text-lg text-cream">Active Schedule Alarms</h3>
                 <span className="text-[10px] text-sand/40 font-mono">
                   Database Sync: <strong className={dbConnected ? "text-green-500 font-bold" : "text-gold font-bold"}>
-                    {dbConnected ? "Live MySQL" : "Local Fallback"}
+                    {dbConnected ? "Live Firebase" : "Local Fallback"}
                   </strong>
                 </span>
               </div>

@@ -132,8 +132,8 @@ export default function Products() {
     list.unshift(newOrder);
     localStorage.setItem("ekva_orders", JSON.stringify(list));
 
-    // Save to MySQL database via PHP API
-    fetch("/api/orders.php", {
+    // Save to database via Node.js API
+    fetch("/api/orders", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -142,11 +142,11 @@ export default function Products() {
     })
       .then((res) => {
         if (!res.ok) {
-          console.warn("PHP database order failed, saved to local storage fallback only.");
+          console.warn("Node.js database order failed, saved to local storage fallback only.");
         }
       })
       .catch((err) => {
-        console.warn("PHP server offline, saved to local storage fallback only.", err);
+        console.warn("Node.js server offline, saved to local storage fallback only.", err);
       });
 
     setSuccessOrder(newOrder);
