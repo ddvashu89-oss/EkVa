@@ -25,6 +25,10 @@
   ],
   "exclude": [
     "node_modules",
-    "src/app"
+    "src/app",
+    ".next",
+    "next.config.ts",
+    "next-env.d.ts",
+    "php-backend"
   ]
 }
